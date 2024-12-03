@@ -5,44 +5,42 @@ name: Python application
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
+    env:
+      PYTHONUNBUFFERED: "True"
+      UV_LINK_MODE: "copy"
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
-      - name: Install poetry
-        run: pipx install poetry
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        shell: bash
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v3
+      - uses: actions/cache@v4
+        id: cache-uv
         with:
-          python-version: 3.12-dev
-          cache: 'poetry'
-
-      - name: Change poetry version
-        run: |
-          rm ./poetry.toml
-          poetry env use python3.12
+          path: ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
 
       - name: Install Dependencies
-        run: poetry install
+        run: uv sync
+        shell: bash
 
       - name: Code Quality
         run: |
-          poetry check
-          poetry run black --exclude .venv . --check
-          poetry run mypy .
-          poetry run flake8 .
+          uv run pyright .
+          uv run ruff check .
+          uv run ruff format . --check --diff
 
       - name: Unit Tests
         run: |
-          poetry run pytest python
+          uv run pytest python
