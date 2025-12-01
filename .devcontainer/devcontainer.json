@@ -4,8 +4,8 @@
     "dockerfile": "Dockerfile",
     "context": "..",
     "args": {
-      "VARIANT": "3.12",
-      "UV_VERSION": "0.5.5"
+      "VARIANT": "3.14",
+      "UV_VERSION": "0.9.13"
     }
   },
   // Add the IDs of extensions you want installed when the container is created.
@@ -15,15 +15,17 @@
         "charliermarsh.ruff",
         "ms-azuretools.vscode-docker",
         "ms-python.python",
-        "kevinrose.vsc-python-indent",
         "redhat.vscode-yaml",
         "shardulm94.trailing-spaces",
         "tamasfe.even-better-toml",
-        "GitHub.copilot",
         "ms-toolsai.jupyter-keymap",
-        "ms-toolsai.jupyter",
-        "shardulm94.trailing-spaces"
-      ]
+        "ms-toolsai.jupyter"
+      ],
+      "settings": {
+        "github.copilot.enable": {
+          "*": false
+        }
+      }
     }
   },
   "containerEnv": {
@@ -31,10 +33,20 @@
     "PYTHONUNBUFFERED": "True",
     "UV_LINK_MODE": "copy"
   },
-  "postCreateCommand": "uv sync --frozen",
+  "postCreateCommand": "uv sync --frozen && uv pip install -e . && echo '\n# Auto-activate venv and source .env\nif [ -f ${containerWorkspaceFolder}/.env ]; then set -a; source ${containerWorkspaceFolder}/.env; set +a; fi\nif [ -f ${containerWorkspaceFolder}/.venv/bin/activate ]; then source ${containerWorkspaceFolder}/.venv/bin/activate; fi' >> ~/.zshrc",
   "postStartCommand": "uv run pre-commit install",
   "remoteUser": "vscode",
   "features": {
     "github-cli": "latest"
+  },
+  "secrets": {
+    "ADVENT_SESSION_COOKIE": {
+      "description": "(Optional) Advent of Code Session Cookie, used for pulling down per-user puzzle inputs.",
+      "documentationUrl": "https://adventofcode.com/"
+    },
+    "ANTHROPIC_API_KEY": {
+      "description": "(Optional) Anthropic API key for extracting example inputs and answers.",
+      "documentationUrl": "http://console.anthropic.com/"
+    }
   }
 }

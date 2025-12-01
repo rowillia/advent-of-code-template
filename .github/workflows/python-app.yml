@@ -43,4 +43,4 @@ jobs:
 
       - name: Unit Tests
         run: |
-          uv run pytest python
+          uv run pytest aoc/tests
