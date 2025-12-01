@@ -2,25 +2,30 @@
 
 ## Usage
 
-This works best inside of a VSCode Codespace or DevContainer.
+This works best inside of a VSCode Codespace or locally with a DevContainer.
 
-1. (Optional) Set the environment variable `ADVENT_SESSION_COOKIE` to your adventofcode session cookie to automatically download your problem input. This can be found in the "Application > Storage > Cookies" section of the Chrome Developer Tools while visiting https://adventofcode.com .
+### (Optional) Environment Variables
+1. (Optional) Set the environment variable `ADVENT_SESSION_COOKIE` to automatically download your problem input.  This can be find in the "Application > Storage > Cookies" section of the Chrome Developer Tools while visiting https://adventofcode.com .
 
-    <img width="509" alt="Screenshot 2023-11-28 at 5 35 34 PM" src="https://github.com/rowillia/advent2022/assets/808798/40d6f22e-9b55-405c-a56e-8b47b02ac7d2">
+    <img width="509" alt="Screenshot 2023-11-28 at 5 35 34 PM" src="https://github.com/rowillia/advent2022/assets/808798/40d6f22e-9b55-405c-a56e-8b47b02ac7d2">
 
-1. (Optional) Set the environment variable `ANTHROPIC_API_KEY` to your Anthropic API key, you can find one at https://console.anthropic.com . This will be used to automatically parse the problem's test data (NOT to answer the question).
+1. (Optional) Set the environment variable `ANTHROPIC_API_KEY` to your Anthropic API key, you can find one at https://console.anthropic.com .  This will be used to automatically parse the example input from the problem (NOT to answer the question).
+
+These can be configured as [Codespace Secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces) or stored in a local `.env` file (see `.env.example` for an example).
+
+### Usage
 
 1. Generate the scaffolding for today's question
     ```bash
     aoc scaffold
     ```
-1. If you didn't specify an ANTHROPIC_API_KEY, paste the sample input and answer(s) into `examples/{year}/{day}.yaml`. For example:
+1. If you didn't specify an ANTHROPIC_API_KEY, Paste the sample input and answer(s) into `examples/{year}/{day}.yaml`.  For example:
 
     ```yaml
     input: |-
-      A Y
-      B X
-      C Z
+    A Y
+    B X
+    C Z
     answers:
     - 15
     - 12
@@ -33,31 +38,25 @@ Scaffolding will generate an empty solution file with 2 methods - `part1` and `p
 """
 --- Day X: Problem Title ---
 """
-from aoc.utils.helpers import example_input, example_answer
 
-year = 2024
-day = 1
-
-# Explore with example input
-inp = example_input(year, day, part=1)
-answer = example_answer(year, day, part=1)
-print(f"Example input: {inp[:100]}...")
-print(f"Expected answer: {answer}")
-
-# %%
 def part1(text: str) -> int | None:
     return None
 
 
-# %%
 def part2(text: str) -> int | None:
     return None
 ```
 
-Unit Tests will be automatically generated based on the examples specified in the above yaml. Simply run:
+Unit Tests will be automatically generated based on the examples specified in the above yaml.  Simply run:
 
 ```bash
-uv run pytest
+pytest .
+```
+
+By default tests only run for the current year, but we can force tests for all years to run with:
+
+```
+ADVENT_RUN_ALL_TESTS=True pytest .
 ```
 
 Once you are satisfied with today's answer, generate your answer with:
